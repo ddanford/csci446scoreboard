@@ -10,19 +10,12 @@ $(function() {
 });
 
 function populateHighScores() {
-  var tempScores = new Array();
-  $.getJSON("localhost:3000/high_scores.json", function(scores){
-    $.each(scores, function(index, highscore){
-      console.log(highscore.score);
-      console.log(highscore.name);
-      tempScores.push([value.score, value.name]);
-      $('div#highScores').html("");
-      tempScores.sort(function(a,b){ return b[0] - a[0]; });
-      for( var i=0; i<scores.length; i++) {
-        $('div#highScores').append("<p>" + tempScores[i][0] + " " + tempScores[i][1] + "</p>");
-      }
-    });
-  });
+  $.get('http://localhost:3000/high_scores', function(scores) {
+    $('div#highScores').empty();
+    for(var i=0; i<scores.length; i++){
+      $('div#highScores').append('<p>' + scores[i].score + ' ' + scores[i].name + '</p>');
+    }
+  })
 }
 
 function updateScore(score) {
@@ -66,18 +59,5 @@ function checkGuess() {
 
 function sendScore(){
   var name = prompt("Success!  Enter your name to submit your score!", "Name");
-  $.ajax("/high_scores.json", {
-    type: "POST",
-    data:{ high_score : {
-      score: guessesLeft,
-      name: name
-      }
-    },
-    error: function(errorData) { console.log(errorData) }
-  });
-  
-  console.log({
-    score: guessesLeft,
-    name: name
-  });
+  $.post('http://localhost:3000/high_scores', { "score": guessesLeft, "name": name } );
 }

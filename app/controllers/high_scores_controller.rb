@@ -2,12 +2,9 @@ class HighScoresController < ApplicationController
   # GET /high_scores
   # GET /high_scores.json
   def index
-    @high_scores = HighScore.all
+    @high_scores = HighScore.all.sort_by &:score
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @high_scores }
-    end
+    respond_with(@high_scores)
   end
 
   # GET /high_scores/1
@@ -40,7 +37,7 @@ class HighScoresController < ApplicationController
   # POST /high_scores
   # POST /high_scores.json
   def create
-    @high_score = HighScore.new(params[:high_score])
+    @high_score = HighScore.new(score: params[:score], name: params[:name])
 
     respond_to do |format|
       if @high_score.save
