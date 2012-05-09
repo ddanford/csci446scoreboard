@@ -10,9 +10,9 @@ $(function() {
 });
 
 function populateHighScores() {
-  $.get('http://localhost:3000/high_scores', function(scores) {
+  $.get('http://localhost:3000/high_scores.json', function(scores) {
     $('div#highScores').empty();
-    for(var i=0; i<scores.length; i++){
+    for(var i=scores.length-1; i>=0; i--){
       $('div#highScores').append('<p>' + scores[i].score + ' ' + scores[i].name + '</p>');
     }
   })
@@ -59,5 +59,5 @@ function checkGuess() {
 
 function sendScore(){
   var name = prompt("Success!  Enter your name to submit your score!", "Name");
-  $.post('http://localhost:3000/high_scores', { "score": guessesLeft, "name": name } );
+  $.post('http://localhost:3000/high_scores.json', { "score": guessesLeft, "name": name } );
 }

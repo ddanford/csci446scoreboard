@@ -1,4 +1,5 @@
 class HighScoresController < ApplicationController
+  respond_to :json, :html
   # GET /high_scores
   # GET /high_scores.json
   def index
