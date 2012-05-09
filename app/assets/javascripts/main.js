@@ -4,14 +4,14 @@ var myNumber = Math.floor(Math.random()*100+1);
 
 $(function() {
   updateScore(guessesLeft);
-  populateHighScores(highScores);
+  populateHighScores();
   $("div.high").hide();
   $("div.low").hide();
 });
 
-function populateHighScores(scores) {
+function populateHighScores() {
   var tempScores = new Array();
-  $.getJSON("/high_scores.json", function(scores){
+  $.getJSON("localhost:3000/high_scores.json", function(scores){
     $.each(scores, function(index, highscore){
       console.log(highscore.score);
       console.log(highscore.name);
@@ -21,8 +21,8 @@ function populateHighScores(scores) {
       for( var i=0; i<scores.length; i++) {
         $('div#highScores').append("<p>" + tempScores[i][0] + " " + tempScores[i][1] + "</p>");
       }
-    };
-  };
+    });
+  });
 }
 
 function updateScore(score) {
@@ -51,7 +51,7 @@ function checkGuess() {
     $("div.low").hide();
     
     sendScore();
-    populateHighScores(highScores);
+    populateHighScores();
     myNumber = Math.floor(Math.random()*100+1);
     guessesLeft = 10;
     updateScore(guessesLeft);
@@ -73,7 +73,7 @@ function sendScore(){
       name: name
       }
     },
-    error: function(errorData { console.log(errorData)}
+    error: function(errorData) { console.log(errorData) }
   });
   
   console.log({
