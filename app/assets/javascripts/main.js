@@ -10,10 +10,19 @@ $(function() {
 });
 
 function populateHighScores(scores) {
-  $('div#highScores').html("");
-  for (var i = 0; i < scores.length; ++i) {
-    $('div#highScores').append("<p>" + scores[i][0] + " " + scores[i][1] + "</p>");
-  }
+  var tempScores = new Array();
+  $.getJSON("/high_scores.json", function(scores){
+    $.each(scores, function(index, highscore){
+      console.log(highscore.score);
+      console.log(highscore.name);
+      tempScores.push([value.score, value.name]);
+      $('div#highScores').html("");
+      tempScores.sort(function(a,b){ return b[0] - a[0]; });
+      for( var i=0; i<scores.length; i++) {
+        $('div#highScores').append("<p>" + tempScores[i][0] + " " + tempScores[i][1] + "</p>");
+      }
+    };
+  };
 }
 
 function updateScore(score) {
@@ -40,8 +49,8 @@ function checkGuess() {
   {
     $("div.high").hide();
     $("div.low").hide();
-    var name = prompt("Success!  Enter your name to submit your score!", "Name");
-    highScores.push([guessesLeft, name]);
+    
+    sendScore();
     populateHighScores(highScores);
     myNumber = Math.floor(Math.random()*100+1);
     guessesLeft = 10;
@@ -53,4 +62,22 @@ function checkGuess() {
     guessesLeft = 10;
     updateScore(guessesLeft);    
   }
+}
+
+function sendScore(){
+  var name = prompt("Success!  Enter your name to submit your score!", "Name");
+  $.ajax("/high_scores.json", {
+    type: "POST",
+    data:{ high_score : {
+      score: guessesLeft,
+      name: name
+      }
+    },
+    error: function(errorData { console.log(errorData)}
+  });
+  
+  console.log({
+    score: guessesLeft,
+    name: name
+  });
 }
